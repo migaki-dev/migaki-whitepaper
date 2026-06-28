@@ -1,0 +1,55 @@
+% arXiv-friendly, pdflatex-compatible preprint source.
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsfonts,mathtools}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{xurl}
+\usepackage{listings}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+
+\definecolor{migakiblue}{RGB}{31, 78, 121}
+\definecolor{migakigray}{RGB}{245, 247, 250}
+\definecolor{migakiline}{RGB}{210, 216, 224}
+
+\lstdefinestyle{migaki}{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  rulecolor=\color{migakiline},
+  backgroundcolor=\color{migakigray},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+  aboveskip=0.9em,
+  belowskip=0.9em
+}
+\lstset{style=migaki}
+
+\newtheorem{definition}{Definition}
+\newtheorem{principle}{Principle}
+\newtheorem{claim}{Claim}
+
+\newcommand{\mir}{\textsc{mIR}}
+\newcommand{\migaki}{\textsc{Migaki}}
+\newcommand{\plan}{\pi}
+\newcommand{\baseplan}{\pi_0}
+\newcommand{\Plans}{\Pi}
+\newcommand{\Tasks}{\mathcal{T}}
+\newcommand{\Validators}{\mathcal{V}}
+\newcommand{\Constraints}{\mathcal{K}}
+\newcommand{\Models}{\mathcal{M}}
+\newcommand{\Policy}{\mathsf{Policy}}
+\newcommand{\Accept}{\mathsf{Accept}}
+\newcommand{\Cost}{\widehat{C}}
+\newcommand{\Latency}{\widehat{L}}
+\newcommand{\Risk}{\widehat{R}}
+\newcommand{\Quality}{Q}

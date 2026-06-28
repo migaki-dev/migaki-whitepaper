@@ -1,0 +1,37 @@
+\section{Formal Model}
+
+Let an agentic workflow be represented as a directed acyclic or resumable graph
+\begin{equation}
+G = (V,E),
+\end{equation}
+where each node $v \in V$ is typed by
+\begin{equation}
+\tau(v) \in \{\textsc{ModelCall}, \textsc{ToolCall}, \textsc{Retrieval}, \textsc{Transform}, \textsc{Validator}, \textsc{HumanApproval}, \textsc{CacheRead}, \textsc{CacheWrite}, \textsc{Branch}, \textsc{Join}\}.
+\end{equation}
+The graph is logical: it describes what computation should occur, not how it should be realized.
+
+An execution plan $\plan$ assigns execution decisions to $G$:
+\begin{equation}
+\plan = (m, r, s, c, a, h),
+\end{equation}
+where $m$ assigns models/providers to model-call nodes, $r$ assigns retry and fallback policies, $s$ assigns a schedule, $c$ assigns cache behavior, $a$ assigns context actions such as keep/drop/deduplicate/compress, and $h$ assigns human-approval and validation gates.
+
+Let $\Plans(G,\Constraints)$ denote the set of feasible plans for $G$ under system constraints $\Constraints$. Let $\baseplan$ denote the baseline plan authored by the application or framework. A \migaki{} optimizer searches for
+\begin{equation}
+\plan^* = \arg\min_{\plan \in \Plans(G,\Constraints)}
+\lambda_C \Cost(\plan) + \lambda_L \Latency_{p95}(\plan) + \lambda_R \Risk(\plan) + \lambda_P P(\plan),
+\label{eq:objective}
+\end{equation}
+subject to
+\begin{align}
+\Quality(\plan;\Tasks,\Validators) &\geq \Quality(\baseplan;\Tasks,\Validators) - \epsilon_Q, \label{eq:quality}\\
+\Policy(\plan) &\models \Constraints, \label{eq:policy}\\
+\Cost(\plan) &\leq B, \label{eq:budget}\\
+\Latency_{p95}(\plan) &\leq S. \label{eq:latency}
+\end{align}
+Here $\Cost$ is estimated or measured monetary cost, $\Latency_{p95}$ is tail latency, $\Risk$ estimates quality or operational risk, and $P$ captures policy penalty terms. The quality constraint in Equation~\ref{eq:quality} is deliberately validator-based, not confidence-based.
+
+This framing avoids the vague claim of ``same answer, lower cost.'' A defensible claim is instead:
+\begin{quote}
+Equivalent task outcome under declared validators and allowed regression thresholds, with lower cost, lower latency, or improved reliability.
+\end{quote}

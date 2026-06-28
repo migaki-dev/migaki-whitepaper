@@ -1,0 +1,15 @@
+\section{Why Now}
+
+Several trends make execution optimization timely.
+
+First, provider fragmentation is increasing. Organizations use multiple frontier providers, local models, specialized models, and gateways. Provider-neutral execution policy becomes more valuable as the provider landscape becomes heterogeneous.
+
+Second, context is larger but not free. Large context windows reduce some pressure but increase hidden waste. Prompt caching makes context layout itself an execution optimization problem \citep{openai_prompt_caching,anthropic_prompt_caching}.
+
+Third, agents are becoming long-running. Durable execution, state persistence, and human-in-the-loop workflows are increasingly part of agent infrastructure \citep{langgraph_overview,temporal_agents,openai_agents_running}.
+
+Fourth, tool boundaries are becoming protocolized. MCP turns tools into structured, discoverable interfaces rather than one-off function blobs \citep{mcp_tools}.
+
+Fifth, observability and evaluation are maturing. Traces, cost metrics, latency metrics, prompt management, datasets, and evaluator outputs are becoming production expectations \citep{langfuse_docs,otel_genai}.
+
+Together, these trends create the preconditions for an optimizer. Once execution becomes structured, measured, and multi-provider, optimization becomes possible.

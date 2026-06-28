@@ -1,0 +1,24 @@
+\section{Position Within the Ecosystem}
+
+\migaki{} is not an agent framework. Agent frameworks model planning, orchestration, tool loops, memory, user interaction, and application-specific control flow. OpenAI Agents SDK, LangGraph, Google ADK, and Microsoft Agent Framework all target parts of this space \citep{openai_agents_js,langgraph_overview,google_adk,microsoft_agent_framework}.
+
+\migaki{} is not an AI gateway. Gateways provide provider abstraction, load balancing, fallbacks, caching, rate limits, budgets, and monitoring. LiteLLM, Cloudflare AI Gateway, and Vercel AI Gateway already cover substantial parts of this surface \citep{litellm_routing,cloudflare_ai_gateway,vercel_ai_gateway_observability,vercel_fallbacks}.
+
+\migaki{} is not a durable workflow engine. Durable runtimes such as Temporal preserve progress across failures and support long-running workflows, including human-in-the-loop workloads \citep{temporal_agents}. \migaki{} may integrate with these systems, but does not replace their persistence semantics.
+
+\migaki{} is not an observability platform. Platforms such as Langfuse provide tracing, debugging, prompt management, latency and cost tracking, datasets, and evaluation workflows \citep{langfuse_docs}. \migaki{} should export evidence to such systems rather than reinvent them.
+
+\migaki{} occupies the missing middle:
+
+\begin{center}
+\fbox{\begin{minipage}{0.78\linewidth}
+\centering
+Application or Agent Framework\\
+$\downarrow$\\
+\textbf{Migaki Execution Optimizer}\\
+$\downarrow$\\
+Provider, Gateway, Tool, Workflow, and Observability Backends
+\end{minipage}}
+\end{center}
+
+It consumes a logical execution graph, applies optimization passes, lowers the result into concrete runtimes, and emits evidence.

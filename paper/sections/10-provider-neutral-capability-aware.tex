@@ -1,0 +1,22 @@
+\section{Provider Neutral, Capability Aware}
+
+\migaki{} is provider-neutral, but it should not be provider-naive. Different providers expose different capabilities: prompt caching, explicit cache breakpoints, tool calling, remote MCP support, code execution, file search, web search, structured outputs, reasoning controls, batch APIs, rate-limit semantics, data-retention modes, region controls, and tracing integrations.
+
+A lowest-common-denominator abstraction would erase useful execution capabilities. Instead, \mir{} should remain portable while lowering remains capability-aware:
+
+\begin{lstlisting}[language={}]
+type ProviderCapabilities = {
+  supportsPromptCaching: boolean
+  supportsExplicitCacheBreakpoints: boolean
+  supportsToolCalling: boolean
+  supportsRemoteMCP: boolean
+  supportsStructuredOutputs: boolean
+  supportsBatching: boolean
+  supportsReasoningControls: boolean
+  supportsZeroDataRetention?: boolean
+  maxContextTokens?: number
+  cacheTtlOptions?: string[]
+}
+\end{lstlisting}
+
+Provider backends lower optimized \mir{} into concrete execution plans. In the near term, providers do not execute \mir{} directly. \migaki{} executes through adapters targeting provider APIs, gateways, workflow runtimes, or local inference backends.
