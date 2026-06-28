@@ -4,17 +4,16 @@ Source and release assets for:
 
 **Migaki: Toward an Execution Optimizer for Agentic Systems**
 
-Current draft: `v0.3`
+This repository is a living draft until the 1.0 release. Draft/version labels live inside the paper source itself.
 
 ## Repository Layout
 
 ```txt
 .
 +-- LICENSE
-+-- Makefile
 +-- README.md
 +-- dist/
-|   `-- migaki-whitepaper-v0.3.pdf
+|   `-- migaki-whitepaper.pdf
 +-- paper/
 |   +-- main.tex
 |   +-- preamble.tex
@@ -22,7 +21,9 @@ Current draft: `v0.3`
 |   +-- references.bib
 |   `-- sections/
 `-- scripts/
-    `-- build-pdf.sh
+    +-- build-pdf
+    +-- clean
+    `-- clean-all
 ```
 
 The LaTeX source is split by responsibility:
@@ -38,31 +39,18 @@ The LaTeX source is split by responsibility:
 Requirements:
 
 - `pdflatex`
-- a POSIX shell
-- `make` for the convenience target
+- an environment that can run executable scripts with a `/bin/sh` shebang
 
-On macOS, `pdflatex` is available through MacTeX or BasicTeX. For example:
-
-```sh
-brew install --cask mactex-no-gui
-```
-
-Build the PDF:
+The repository does not prescribe a TeX distribution, operating system, CPU architecture, or interactive shell. Install any TeX distribution that provides `pdflatex`, then run the script from the repository root. Because the scripts carry their own interpreter line, the same command can be launched from `sh`, `bash`, `zsh`, `fish`, or `nushell`.
 
 ```sh
-make pdf
-```
-
-Or run the script directly:
-
-```sh
-./scripts/build-pdf.sh
+./scripts/build-pdf
 ```
 
 The generated PDF is written to:
 
 ```txt
-dist/migaki-whitepaper-v0.3.pdf
+dist/migaki-whitepaper.pdf
 ```
 
 Intermediate LaTeX files are written under `build/latex/`.
@@ -70,13 +58,13 @@ Intermediate LaTeX files are written under `build/latex/`.
 ## Cleanup
 
 ```sh
-make clean
+./scripts/clean
 ```
 
 Remove generated PDF output too:
 
 ```sh
-make distclean
+./scripts/clean-all
 ```
 
 ## License
