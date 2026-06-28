@@ -12,8 +12,6 @@ This repository is a living draft until the 1.0 release. Draft/version labels li
 .
 +-- LICENSE
 +-- README.md
-+-- dist/
-|   `-- migaki-whitepaper.pdf
 +-- paper/
 |   +-- main.tex
 |   +-- preamble.tex
@@ -25,6 +23,8 @@ This repository is a living draft until the 1.0 release. Draft/version labels li
     +-- clean
     `-- clean-all
 ```
+
+Generated output is intentionally not committed. Local PDF builds write to `dist/`, which is ignored by Git. The GitHub Pages site can render from the tracked source files instead of relying on a checked-in PDF artifact.
 
 The LaTeX source is split by responsibility:
 
@@ -53,7 +53,7 @@ The generated PDF is written to:
 dist/migaki-whitepaper.pdf
 ```
 
-Intermediate LaTeX files are written under `build/latex/`.
+Both `dist/` and intermediate LaTeX files under `build/latex/` are local generated output and are ignored by Git.
 
 ## Cleanup
 
