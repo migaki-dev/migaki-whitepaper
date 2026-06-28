@@ -1,0 +1,43 @@
+\section{mIR: Migaki Intermediate Representation}
+
+\migaki{} introduces \mir, a provider-neutral intermediate representation for AI execution. \mir{} is not a prompt format. It is not a JSON wrapper around chat completions. It is a logical representation of agentic computation.
+
+At minimum, \mir{} should represent:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item model calls, tool calls, and retrieval calls;
+  \item context artifacts and memory reads/writes;
+  \item cache reads/writes and provider-specific cache annotations;
+  \item transforms, validators, branches, joins, retries, and fallbacks;
+  \item human approval gates and side-effect annotations;
+  \item observability hooks and execution constraints.
+\end{itemize}
+
+The key design principle is that context is a first-class object. Most execution waste in AI systems is caused not only by final model calls, but by repeated instructions, duplicated retrieved chunks, irrelevant history, oversized memory, unstructured summaries, and failure to exploit provider-specific cache behavior.
+
+\begin{lstlisting}[language={}]
+type MIRPlan = {
+  id: string
+  version: "migaki.mir.v0"
+  nodes: MIRNode[]
+  edges: MIREdge[]
+  context: MIRContextBlock[]
+  constraints: MIRConstraints
+}
+
+type MIRContextBlock = {
+  id: string
+  role: "system_instruction" | "developer_instruction" |
+        "user_input" | "retrieved_document" | "memory" |
+        "tool_result" | "example" | "scratchpad" |
+        "validator_output"
+  contentRef: string
+  provenance: Provenance
+  tokenEstimate?: number
+  mutability: "fixed" | "droppable" | "deduplicable" |
+              "compressible" | "summarizable"
+  cachePolicy?: CachePolicy
+  privacyClass?: PrivacyClass
+  retentionPolicy?: RetentionPolicy
+}
+\end{lstlisting}

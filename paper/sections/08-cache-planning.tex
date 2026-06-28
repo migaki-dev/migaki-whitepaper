@@ -1,0 +1,15 @@
+\section{Cache Planning}
+
+Provider APIs increasingly expose prompt caching behavior. OpenAI documents automatic prompt caching that can reduce latency and input token costs for repeated prompt prefixes \citep{openai_prompt_caching}. Anthropic documents prompt caching with automatic caching, explicit cache breakpoints, TTL behavior, and cache-control semantics \citep{anthropic_prompt_caching,anthropic_costs}.
+
+For a model-call node $v$, let its input be divided into cached-read tokens $h_v$, cache-write tokens $w_v$, fresh input tokens $f_v$, and output tokens $o_v$. A simple provider-specific cost estimate is
+\begin{equation}
+\Cost_v = c^{\mathrm{read}}_{p(v)} h_v + c^{\mathrm{write}}_{p(v)} w_v + c^{\mathrm{input}}_{p(v)} f_v + c^{\mathrm{output}}_{p(v)} o_v,
+\label{eq:cache_cost}
+\end{equation}
+where $p(v)$ is the provider/backend chosen for node $v$. A cache-planning pass minimizes expected cost and latency by arranging stable context in prefixes, preserving repeated system/developer instructions, and placing provider-specific cache boundaries when supported:
+\begin{equation}
+\min_c \sum_{v \in V_{\mathrm{model}}} \mathbb{E}[\Cost_v(c)]
+\quad \text{subject to} \quad c \in \mathcal{C}_{p(v)}.
+\end{equation}
+Here $\mathcal{C}_{p(v)}$ represents the cache capabilities of the selected provider, such as automatic prefix caching or explicit breakpoints.
