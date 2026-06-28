@@ -1,0 +1,21 @@
+\section{Initial Scope}
+
+The first implementation should be intentionally small. The objective is not completeness. The objective is validating the abstraction.
+
+\migaki{} v0 should include:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item TypeScript runtime and fetch-compatible provider wrapper;
+  \item \mir{} schema v0 and provider capability registry;
+  \item adapters for OpenAI-style, Anthropic-style, and LiteLLM-compatible APIs;
+  \item context block ledger, token estimation, and cost estimation;
+  \item exact duplicate context elimination and stable prefix detection;
+  \item prompt-cache layout reporting;
+  \item simple retry, fallback, and static routing policy;
+  \item execution evidence bundle and replayable trace artifact;
+  \item CLI report for baseline-versus-optimized execution.
+\end{itemize}
+
+It should not lead with general semantic compression, general semantic caching, autonomous global routing, cross-provider equivalence, or claims of identical answers. These can be experimental passes later.
+
+A credible v0 demo is a multi-step RAG or code-review workflow in which \migaki{} reduces context duplication, improves cache layout, routes cheap classification/ranking calls to cheaper models, keeps synthesis on stronger models, validates structured output, retries only failed branches, and emits an evidence report showing cost, latency, and validator deltas.

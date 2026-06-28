@@ -1,0 +1,18 @@
+\section{Routing Under Constraints}
+
+Routing is a natural optimization pass, but it is easy to overclaim. Research on LLM routing studies the cost-quality tradeoff between stronger and weaker models. RouteLLM learns routers from preference data and reports cost reductions under benchmarked conditions \citep{routellm}. LLMRouterBench provides a large benchmark for routing across datasets and models and warns that many approaches perform similarly under unified evaluation, with some commercial routers failing to reliably outperform simple baselines \citep{llmrouterbench}.
+
+For a model-call node $v$, let $\Models_v$ be the feasible model/provider set after policy and capability filtering. A routing pass may choose
+\begin{equation}
+m^*(v)=\arg\min_{m\in\Models_v} \widehat c(v,m)
+\label{eq:routing}
+\end{equation}
+subject to
+\begin{align}
+\widehat q(v,m) &\geq \theta_v, \\
+\widehat \ell(v,m) &\leq s_v, \\
+\mathrm{allowed}(m,\kappa_v,\Constraints) &= 1.
+\end{align}
+Here $\widehat c$ is estimated cost, $\widehat q$ is estimated task-specific quality, $\widehat \ell$ is estimated latency, $\theta_v$ is a quality threshold, $s_v$ is a latency service level, and $\kappa_v$ is the privacy class of the data entering node $v$.
+
+A \migaki{} router is not credible because it routes. It is credible only if it reports measured deltas against baselines and validates that quality constraints still hold.

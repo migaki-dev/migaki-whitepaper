@@ -1,0 +1,39 @@
+\section{Optimization Passes}
+
+A \migaki{} execution plan is transformed by passes over \mir. Examples include:
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{p{0.23\linewidth}p{0.66\linewidth}}
+\toprule
+\textbf{Pass family} & \textbf{Examples} \\
+\midrule
+Context & exact duplicate elimination, dead context removal, tool definition pruning, stable prefix construction, memory compaction planning \\
+Cache & prompt-cache layout, breakpoint placement, cache hit estimation, cache read/write reporting \\
+Routing & model selection, provider selection, fallback planning, rate-limit-aware routing, cost-aware routing, latency-aware routing \\
+Parallelism & independent retrieval parallelization, parallel tool execution, speculative branch execution, validator parallelization \\
+Verification & deterministic invariants, schema validation, source-grounding checks, task-specific validators, model-based judges \\
+Reliability & retry planning, fallback planning, partial replay, idempotency checks, human approval insertion \\
+Governance & provider allow/deny enforcement, data-retention enforcement, privacy-class routing, trace redaction \\
+\bottomrule
+\end{tabular}
+\caption{Representative \migaki{} optimization pass families.}
+\end{table}
+
+Each pass should emit a plan diff and evidence. A minimal pass interface is:
+
+\begin{lstlisting}[language={}]
+interface MigakiPass {
+  name: string
+  version: string
+  apply(plan: MIRPlan, context: PassContext): Promise<PassResult>
+}
+
+type PassResult = {
+  plan: MIRPlan
+  diff: MIRPlanDiff
+  evidence: Evidence[]
+  warnings: Warning[]
+}
+\end{lstlisting}

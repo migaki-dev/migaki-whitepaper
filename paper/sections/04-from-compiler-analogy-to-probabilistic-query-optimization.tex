@@ -1,0 +1,9 @@
+\section{From Compiler Analogy to Probabilistic Query Optimization}
+
+Computing repeatedly separates intent from execution. Source code is separated from machine code by compilers. SQL queries are separated from execution plans by query optimizers. Applications are separated from CPU scheduling by operating systems. Distributed APIs are separated from transport mechanics by RPC runtimes.
+
+The compiler analogy is useful but limited. Traditional compilers typically preserve exact program semantics. AI execution is stochastic: changing context order, compressing history, switching models, altering retrieval, or delaying reasoning can change output behavior.
+
+\migaki{} is therefore closer to a query optimizer for probabilistic model/tool graphs. A query optimizer receives a logical query, estimates alternatives, and produces an execution plan. \migaki{} receives a logical AI workflow, estimates alternatives, and produces an execution plan under cost, latency, quality, policy, and provider-capability constraints.
+
+The goal is not exact semantic preservation. The goal is validated behavioral equivalence under declared constraints.

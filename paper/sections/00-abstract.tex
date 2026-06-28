@@ -1,0 +1,8 @@
+\begin{abstract}
+Foundation models have become increasingly capable. Agent frameworks have become increasingly sophisticated. Execution has become increasingly fragmented.
+Modern AI systems already contain many forms of execution infrastructure: agent SDKs, graph runtimes, provider gateways, tool protocols, durable workflow engines, caching layers, observability platforms, and evaluation systems. The problem is no longer that execution infrastructure does not exist. The problem is that execution infrastructure does not compose.
+
+Routing lives in gateways. State lives in frameworks. Retries live in workflow engines. Context management lives in provider APIs. Verification lives in evaluation platforms. Tool interoperability lives in protocol layers. Tracing lives in observability systems. Each layer optimizes locally. Few systems represent the full model/tool/retrieval/context workflow as a portable execution object that can be transformed, evaluated, lowered, replayed, and audited.
+
+This paper proposes \migaki, an execution optimizer for agentic systems. \migaki{} separates what an AI system intends to compute from how that computation is realized across models, providers, tools, context, memory, caches, validators, and runtimes. It introduces \mir, a provider-neutral intermediate representation for model/tool/retrieval/context workflows. Applications and frameworks compile into \mir. Optimization passes transform \mir{} under explicit cost, latency, quality, policy, and governance constraints. Runtime backends lower optimized plans into provider-specific APIs and execution environments. Every transformation emits evidence traces so execution optimization remains measurable rather than opaque.
+\end{abstract}

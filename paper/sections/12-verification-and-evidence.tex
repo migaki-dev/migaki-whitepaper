@@ -1,0 +1,29 @@
+\section{Verification and Evidence}
+
+Execution optimization must remain measurable. Every optimization should produce evidence. \migaki{} should emit an Execution Evidence Bundle containing the original plan, optimized plan, plan diff, enabled passes, disabled passes, context changes, token estimates, cache decisions, routing decisions, retry and fallback decisions, validator results, cost and latency deltas, trace identifiers, replay handles, policy decisions, human approvals, and redactions.
+
+Given a baseline plan $\baseplan$ and optimized plan $\plan$, define an evidence tuple
+\begin{equation}
+\mathcal{E}(\baseplan,\plan) =
+(\Delta C, \Delta L, \Delta Q, \mathcal{D}_{\mathrm{plan}}, \mathcal{R}_{\mathrm{validators}}, \mathcal{R}_{\mathrm{policy}}, \mathcal{T}_{\mathrm{trace}}),
+\end{equation}
+where
+\begin{equation}
+\Delta C = \Cost(\baseplan)-\Cost(\plan), \quad
+\Delta L = \Latency(\baseplan)-\Latency(\plan), \quad
+\Delta Q = \Quality(\plan)-\Quality(\baseplan).
+\end{equation}
+The optimized plan is acceptable only if
+\begin{equation}
+\Accept(\plan \mid \baseplan)=1
+\end{equation}
+where
+\begin{equation}
+\Accept(\plan \mid \baseplan)=1 \iff
+\mathcal{R}_{\mathrm{validators}}=1 \wedge
+\Delta Q \geq -\epsilon_Q \wedge
+\mathcal{R}_{\mathrm{policy}}=1.
+\label{eq:acceptance}
+\end{equation}
+
+Evidence is central. Without evidence, optimization becomes invisible prompt mutation. Invisible prompt mutation is not infrastructure.

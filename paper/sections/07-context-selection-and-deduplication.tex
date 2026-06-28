@@ -1,0 +1,25 @@
+\section{Context Selection and Deduplication}
+
+Let a workflow expose candidate context blocks
+\begin{equation}
+X = \{x_1, x_2, \ldots, x_n\}.
+\end{equation}
+Each block has token length $t_i$, utility estimate $u_i$, role $\rho_i$, mutability class $\mu_i$, and privacy class $\kappa_i$. A context-selection pass chooses binary variables $z_i \in \{0,1\}$:
+\begin{equation}
+\max_{z \in \{0,1\}^n}
+\sum_{i=1}^n z_i u_i - \gamma \sum_{i<j} z_i z_j d_{ij}
+\label{eq:context_objective}
+\end{equation}
+subject to
+\begin{align}
+\sum_{i=1}^n z_i t_i &\leq T, \label{eq:token_budget}\\
+z_i &= 1 \quad \forall i \in R, \label{eq:required_context}\\
+z_i &= 0 \implies \mu_i \in \{\textsc{Droppable},\textsc{Compressible},\textsc{Summarizable}\}. \label{eq:mutability}
+\end{align}
+Here $d_{ij}$ penalizes redundant context and $R$ is the set of required blocks. Exact duplicate elimination is the safest first pass: if $H(x_i)=H(x_j)$ for a canonical content hash $H$, and neither block carries unique provenance required by policy, then one copy can be removed while preserving a provenance join.
+
+Lossy compression is different. A compression transform $g$ maps $x_i$ to $g(x_i)$ with $t(g(x_i)) < t_i$. It should be admitted only when a validator accepts it:
+\begin{equation}
+\Accept(g(x_i)) = 1 \iff \Validators_i(g(x_i),x_i)=1 \wedge \Policy(g(x_i))\models \Constraints.
+\end{equation}
+This principle is intentionally conservative: never perform lossy optimization without a declared acceptance test.

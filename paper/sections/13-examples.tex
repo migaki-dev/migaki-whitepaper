@@ -1,0 +1,23 @@
+\section{Examples}
+
+\subsection{RAG Workflow}
+
+A baseline enterprise support workflow may retrieve 20 document chunks, send all chunks to a frontier model, generate an answer, and return it. A \migaki-optimized plan may deduplicate overlapping chunks, drop low-relevance chunks, preserve stable policy instructions as a cacheable prefix, route chunk ranking to a cheaper model, use a stronger model for synthesis, validate the answer against retrieved sources, retry only the synthesis step if validation fails, and emit an evidence bundle.
+
+The agent framework still decided the strategy:
+
+\begin{center}
+Retrieve $\rightarrow$ Answer $\rightarrow$ Validate.
+\end{center}
+
+\migaki{} optimized the execution:
+
+\begin{center}
+Deduplicate $\rightarrow$ Cache $\rightarrow$ Route $\rightarrow$ Parallelize $\rightarrow$ Validate $\rightarrow$ Report.
+\end{center}
+
+\subsection{Code Review Workflow}
+
+A code-review agent may load repository context, changed files, style guides, and prior conversation, then ask a frontier model for review. A \migaki{} plan can mark style guides as fixed and cacheable, mark changed files as non-droppable, remove unrelated history, run deterministic static checks, route lint explanations to a cheaper model, use a stronger model for architectural review, validate final comments against changed lines, and export evidence.
+
+This makes execution policy explicit and measurable: baseline tokens, optimized tokens, baseline cost, optimized cost, latency, validator pass rate, false-positive rate, and comment acceptance rate.
