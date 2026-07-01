@@ -4,4 +4,12 @@ The current AI application stack is crowded. A production agentic system may inc
 
 This is progress. It is also fragmentation. Execution decisions are scattered across application code, framework internals, provider-specific APIs, gateway settings, workflow retries, evaluation jobs, and tracing backends. The same concerns recur: model choice, provider choice, context assembly, duplicate elimination, prompt-cache layout, retrieval ordering, side-effect control, validation, retry policy, human approval, trace capture, cost accounting, and data governance.
 
-\migaki{} begins from a narrow claim: agentic systems need an execution layer that represents model calls, tool calls, retrieval, context artifacts, validators, side effects, and constraints as an optimizable execution graph. The goal is not to build another agent framework. The goal is to make AI execution portable, measurable, and optimizable.
+\migaki{} begins from a narrow claim: agentic systems need an execution layer that represents work as a graph that can be observed, compared, and eventually optimized. The first milestone is not a clever router or a semantic cache. The first milestone is trustworthy evidence: a run should produce an auditable graph of what happened, including model calls, tool calls, handoffs, outputs, failures, usage, and cache keys.
+
+This changes the order of ambition. \migaki{} should first observe trajectories. It should then compare two trajectories and identify exact reusable nodes. It should then replay only those nodes whose cache keys, dependencies, runtime assumptions, and validators make reuse safe. Only after those steps does it become credible to claim avoided work, lower cost, lower latency, or more reliable execution.
+
+\begin{center}
+Observe $\rightarrow$ Compare $\rightarrow$ Detect exact reuse $\rightarrow$ Controlled replay $\rightarrow$ Optimization.
+\end{center}
+
+The goal is not to build another agent framework. Agent frameworks decide strategy. The goal is to make AI execution portable, measurable, reusable, and optimizable.

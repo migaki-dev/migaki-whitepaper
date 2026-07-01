@@ -8,6 +8,8 @@
 
 \migaki{} is not an observability platform. Platforms such as Langfuse provide tracing, debugging, prompt management, latency and cost tracking, datasets, and evaluation workflows \citep{langfuse_docs}. \migaki{} should export evidence to such systems rather than reinvent them.
 
+\migaki{} is also not a cache product in disguise. A cache can store outputs. \migaki{} must explain whether an output is reusable: which input hash matched, which dependencies matched, which runtime assumptions matched, which validator boundary applies, and which downstream nodes depend on the result.
+
 \migaki{} occupies the missing middle:
 
 \begin{center}
@@ -21,4 +23,4 @@ Provider, Gateway, Tool, Workflow, and Observability Backends
 \end{minipage}}
 \end{center}
 
-It consumes a logical execution graph, applies optimization passes, lowers the result into concrete runtimes, and emits evidence.
+It can be approached from two directions. From the planning side, it consumes a logical execution graph, applies optimization passes, lowers the result into concrete runtimes, and emits evidence. From the instrumentation side, it records observed agent runs as trajectory graphs and uses those graphs to learn where exact reuse, replay, and later optimization are possible.

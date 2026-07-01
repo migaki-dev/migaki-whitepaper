@@ -1,37 +1,41 @@
-\section{Formal Model}
+\section{Observed Trajectory Graphs and Exact Reuse}
 
-Let an agentic workflow be represented as a directed acyclic or resumable graph
+Let an observed agent run be represented as a trajectory graph
 \begin{equation}
-G = (V,E),
+T = (V,E,A),
 \end{equation}
-where each node $v \in V$ is typed by
-\begin{equation}
-\tau(v) \in \{\textsc{ModelCall}, \textsc{ToolCall}, \textsc{Retrieval}, \textsc{Transform}, \textsc{Validator}, \textsc{HumanApproval}, \textsc{CacheRead}, \textsc{CacheWrite}, \textsc{Branch}, \textsc{Join}\}.
-\end{equation}
-The graph is logical: it describes what computation should occur, not how it should be realized.
+where each node $v \in V$ is an executed operation, each edge $e \in E$ records a dependency or call relation, and $A$ is the set of run artifacts such as events, reports, cache metadata, usage, errors, and redactions.
 
-An execution plan $\plan$ assigns execution decisions to $G$:
+For a first implementation, the observed node kinds can be deliberately small:
 \begin{equation}
-\plan = (m, r, s, c, a, h),
+\tau(v) \in \{\textsc{AgentStep}, \textsc{ModelCall}, \textsc{ToolCall}, \textsc{Handoff}\}.
 \end{equation}
-where $m$ assigns models/providers to model-call nodes, $r$ assigns retry and fallback policies, $s$ assigns a schedule, $c$ assigns cache behavior, $a$ assigns context actions such as keep/drop/deduplicate/compress, and $h$ assigns human-approval and validation gates.
+Each node carries a stable input hash, an optional output hash, timestamps, status, and metadata. Model and tool nodes additionally carry cache keys. This is the shape of the current \texttt{MigakiGraph}: \texttt{agent\_step}, \texttt{model\_call}, \texttt{tool\_call}, and \texttt{handoff} nodes connected by \texttt{depends\_on}, \texttt{calls}, and \texttt{produces} edges.
 
-Let $\Plans(G,\Constraints)$ denote the set of feasible plans for $G$ under system constraints $\Constraints$. Let $\baseplan$ denote the baseline plan authored by the application or framework. A \migaki{} optimizer searches for
+\begin{definition}[Operation cache key]
+For an operation node $v$, define a cache key
 \begin{equation}
-\plan^* = \arg\min_{\plan \in \Plans(G,\Constraints)}
-\lambda_C \Cost(\plan) + \lambda_L \Latency_{p95}(\plan) + \lambda_R \Risk(\plan) + \lambda_P P(\plan),
-\label{eq:objective}
+K(v)=(op(v), name(v), H_{in}(v), H_{dep}(v), H_{run}(v)),
 \end{equation}
-subject to
-\begin{align}
-\Quality(\plan;\Tasks,\Validators) &\geq \Quality(\baseplan;\Tasks,\Validators) - \epsilon_Q, \label{eq:quality}\\
-\Policy(\plan) &\models \Constraints, \label{eq:policy}\\
-\Cost(\plan) &\leq B, \label{eq:budget}\\
-\Latency_{p95}(\plan) &\leq S. \label{eq:latency}
-\end{align}
-Here $\Cost$ is estimated or measured monetary cost, $\Latency_{p95}$ is tail latency, $\Risk$ estimates quality or operational risk, and $P$ captures policy penalty terms. The quality constraint in Equation~\ref{eq:quality} is deliberately validator-based, not confidence-based.
+where $op$ is the operation kind, $name$ is the model or tool name, $H_{in}$ is the normalized input hash, $H_{dep}$ is the dependency hash, and $H_{run}$ is the runtime hash containing implementation, SDK, model parameters, tool version, and output-schema assumptions.
+\end{definition}
 
-This framing avoids the vague claim of ``same answer, lower cost.'' A defensible claim is instead:
-\begin{quote}
-Equivalent task outcome under declared validators and allowed regression thresholds, with lower cost, lower latency, or improved reliability.
-\end{quote}
+Two nodes from different runs are exact reuse candidates when their cache keys match and their prior output is admissible:
+\begin{equation}
+\Reusable(v_i, v_j)=1 \iff
+K(v_i)=K(v_j) \wedge
+status(v_i)=\textsc{Ok} \wedge
+\Accept(output(v_i), v_j)=1.
+\end{equation}
+
+The acceptance predicate is intentionally explicit. For deterministic tools, it may be a contract check plus dependency hash equality. For model calls, it may require an output schema, validator result, replay policy, and privacy policy. If those requirements are missing, the node may be marked cacheable or potentially reusable, but it should not be replayed automatically.
+
+This framing separates three claims that are often blurred:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Observed:} a trajectory graph records what happened.
+  \item \textbf{Reusable:} two nodes match under exact cache-key and dependency criteria.
+  \item \textbf{Avoided:} a later run safely replayed a prior result instead of executing the node.
+\end{itemize}
+
+Only the third claim justifies cost or latency savings. The first two are already valuable: they turn agent execution from an opaque sequence of calls into an inspectable graph of reusable work.
