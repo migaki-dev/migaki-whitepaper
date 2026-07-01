@@ -1,6 +1,6 @@
 \section{Context Selection and Deduplication}
 
-Let a workflow expose candidate context blocks
+Let a logical workflow expose candidate context blocks
 \begin{equation}
 X = \{x_1, x_2, \ldots, x_n\}.
 \end{equation}
@@ -23,3 +23,11 @@ Lossy compression is different. A compression transform $g$ maps $x_i$ to $g(x_i
 \Accept(g(x_i)) = 1 \iff \Validators_i(g(x_i),x_i)=1 \wedge \Policy(g(x_i))\models \Constraints.
 \end{equation}
 This principle is intentionally conservative: never perform lossy optimization without a declared acceptance test.
+
+Trajectory graphs add a second source of signal. If repeated runs show the same system instructions, tool definitions, repository files, style guides, or retrieved chunks flowing into the same model-call shape, \migaki{} can report them as stable context candidates before changing execution. In v0, the safe path is:
+
+\begin{center}
+detect exact repeated context $\rightarrow$ record cache metadata $\rightarrow$ compare runs $\rightarrow$ propose reuse.
+\end{center}
+
+This is less glamorous than semantic compression, but it creates a falsifiable benchmark target. A report can say how many repeated context-bearing nodes exist, how many tokens are potentially avoidable, and which dependencies prevented reuse.

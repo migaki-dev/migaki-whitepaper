@@ -12,4 +12,6 @@ Fourth, tool boundaries are becoming protocolized. MCP turns tools into structur
 
 Fifth, observability and evaluation are maturing. Traces, cost metrics, latency metrics, prompt management, datasets, and evaluator outputs are becoming production expectations \citep{langfuse_docs,otel_genai}.
 
-Together, these trends create the preconditions for an optimizer. Once execution becomes structured, measured, and multi-provider, optimization becomes possible.
+Sixth, agent trajectories are becoming long and repetitive enough that reuse matters. Coding agents repeatedly read the same files, inspect the same style guides, run the same searches, call the same tools, and rebuild similar summaries. Customer-support agents repeatedly retrieve stable policy documents. Research agents repeatedly traverse the same evidence sources. The waste is no longer only inside one prompt. It is distributed across the trajectory.
+
+Together, these trends create the preconditions for an optimizer. Once execution becomes structured, measured, multi-provider, and repeatable, optimization becomes possible. But the order matters: the industry needs trajectory evidence before it needs confident trajectory mutation.

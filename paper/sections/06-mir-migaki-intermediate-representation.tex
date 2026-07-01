@@ -1,43 +1,31 @@
-\section{mIR: Migaki Intermediate Representation}
+\section{mIR and Trajectory Graphs}
 
-\migaki{} introduces \mir, a provider-neutral intermediate representation for AI execution. \mir{} is not a prompt format. It is not a JSON wrapper around chat completions. It is a logical representation of agentic computation.
+\migaki{} uses two related representations.
 
-At minimum, \mir{} should represent:
+\begin{description}[leftmargin=1.5em]
+  \item[\mir{} plan.] A provider-neutral logical execution plan: what work should be done, under which constraints, with which context, validators, cache policy, and provider requirements.
+  \item[Trajectory graph.] An observed execution record: what actually happened during a run, including agent steps, model calls, tool calls, handoffs, outputs, errors, usage, and cache metadata.
+\end{description}
 
-\begin{itemize}[leftmargin=1.5em]
-  \item model calls, tool calls, and retrieval calls;
-  \item context artifacts and memory reads/writes;
-  \item cache reads/writes and provider-specific cache annotations;
-  \item transforms, validators, branches, joins, retries, and fallbacks;
-  \item human approval gates and side-effect annotations;
-  \item observability hooks and execution constraints.
-\end{itemize}
+\mir{} is not a prompt format. It is not a JSON wrapper around chat completions. It is a logical representation of agentic computation. A trajectory graph is not a full observability product. It is the minimum reusable graph needed to compare runs and reason about exact repeated work.
 
-The key design principle is that context is a first-class object. Most execution waste in AI systems is caused not only by final model calls, but by repeated instructions, duplicated retrieved chunks, irrelevant history, oversized memory, unstructured summaries, and failure to exploit provider-specific cache behavior.
+The current \migaki{} TypeScript implementation grounds this distinction. The \texttt{migaki-openai-agents-js} package instruments the OpenAI Agents SDK for JavaScript/TypeScript \citep{openai_agents_js,migaki_openai_agents_js}. A user can wrap a run:
 
 \begin{lstlisting}[language={}]
-type MIRPlan = {
-  id: string
-  version: "migaki.mir.v0"
-  nodes: MIRNode[]
-  edges: MIREdge[]
-  context: MIRContextBlock[]
-  constraints: MIRConstraints
-}
-
-type MIRContextBlock = {
-  id: string
-  role: "system_instruction" | "developer_instruction" |
-        "user_input" | "retrieved_document" | "memory" |
-        "tool_result" | "example" | "scratchpad" |
-        "validator_output"
-  contentRef: string
-  provenance: Provenance
-  tokenEstimate?: number
-  mutability: "fixed" | "droppable" | "deduplicable" |
-              "compressible" | "summarizable"
-  cachePolicy?: CachePolicy
-  privacyClass?: PrivacyClass
-  retentionPolicy?: RetentionPolicy
-}
+const result = await withMigaki({
+  runId: "repo-task-001",
+  store: new LocalMigakiStore(".migaki"),
+}).run(agent, input)
 \end{lstlisting}
+
+The run writes local artifacts:
+
+\begin{lstlisting}[language={}]
+.migaki/runs/<runId>/events.jsonl
+.migaki/runs/<runId>/graph.json
+.migaki/runs/<runId>/report.md
+\end{lstlisting}
+
+The first milestone is deliberately observational. Model and tool cache keys are recorded, not replayed. The graph exists so future passes can compare trajectories, estimate avoidable work, and explain why particular nodes are or are not reusable.
+
+In mature form, applications and frameworks may compile logical workflows into \mir{} plans before execution. In early form, adapters can observe existing frameworks and derive trajectory graphs after execution. These two paths meet when observed trajectory graphs inform future \mir{} optimization passes.

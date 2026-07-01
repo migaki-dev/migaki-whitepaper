@@ -2,7 +2,7 @@
 
 Agent frameworks decide what should happen next. Gateways route model requests. Workflow engines preserve durable state. Provider APIs expose model-specific capabilities. Tool protocols expose external systems. Observability platforms record behavior. Evaluation systems measure outcomes.
 
-Each layer owns part of execution. Few layers can optimize across the whole execution graph. A single agentic workflow may require decisions across all of the following:
+Each layer owns part of execution. Few layers can optimize across the whole execution graph, and even fewer preserve execution as a reusable artifact. A single agentic workflow may require decisions across all of the following:
 
 \begin{itemize}[leftmargin=1.5em]
   \item model selection and provider routing;
@@ -17,6 +17,16 @@ Each layer owns part of execution. Few layers can optimize across the whole exec
 
 These decisions interact. A cache decision may depend on context layout. A routing decision may depend on privacy class. A retry policy may depend on idempotency. A validation policy may change whether lossy compression is acceptable. Local optimization is therefore insufficient.
 
+The missing middle is not merely another runtime component. It is a representation boundary. The system needs a portable record that can answer:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item which model and tool operations were executed;
+  \item which inputs, dependencies, runtime assumptions, and schemas shaped them;
+  \item which outputs, errors, usage, and validation results were produced;
+  \item which nodes could be reused in a later run without changing declared behavior;
+  \item which nodes could not be reused, and why.
+\end{itemize}
+
 \begin{claim}[Execution graph as optimization boundary]
-The unit of optimization in agentic systems should not be a single prompt or model call. It should be the full model/tool/retrieval/context execution graph.
+The unit of optimization in agentic systems should not be a single prompt or model call. It should be the full model/tool/retrieval/context trajectory, recorded as a graph with evidence.
 \end{claim}

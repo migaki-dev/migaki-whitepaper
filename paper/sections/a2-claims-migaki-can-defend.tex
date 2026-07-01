@@ -2,8 +2,10 @@
 
 \begin{itemize}[leftmargin=1.5em]
   \item \migaki{} separates AI execution policy from application logic.
-  \item \migaki{} represents model/tool/retrieval/context workflows as optimizable execution graphs.
-  \item \migaki{} applies optimization passes under explicit cost, latency, quality, and governance constraints.
+  \item \migaki{} records model/tool/retrieval/context workflows as graph-shaped trajectory evidence.
+  \item \migaki{} can compare repeated runs and identify exact reusable model and tool nodes.
+  \item \migaki{} can report potential reuse, blocked reuse reasons, usage, and estimated avoidable work before replaying anything.
+  \item \migaki{} can apply optimization passes under explicit cost, latency, quality, and governance constraints.
   \item \migaki{} lowers portable plans into provider-specific APIs through capability-aware backends.
-  \item \migaki{} emits evidence traces so optimizations can be audited, replayed, and benchmarked.
+  \item \migaki{} emits evidence traces so observations, comparisons, optimizations, and replays can be audited and benchmarked.
 \end{itemize}

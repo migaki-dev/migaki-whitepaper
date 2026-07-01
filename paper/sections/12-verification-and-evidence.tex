@@ -1,29 +1,33 @@
-\section{Verification and Evidence}
+\section{Verification, Evidence, and Evaluation}
 
-Execution optimization must remain measurable. Every optimization should produce evidence. \migaki{} should emit an Execution Evidence Bundle containing the original plan, optimized plan, plan diff, enabled passes, disabled passes, context changes, token estimates, cache decisions, routing decisions, retry and fallback decisions, validator results, cost and latency deltas, trace identifiers, replay handles, policy decisions, human approvals, and redactions.
+Execution optimization must remain measurable. Every optimization should produce evidence. For planned execution, \migaki{} should emit an Execution Evidence Bundle containing the original plan, optimized plan, plan diff, enabled passes, disabled passes, context changes, token estimates, cache decisions, routing decisions, retry and fallback decisions, validator results, cost and latency deltas, trace identifiers, replay handles, policy decisions, human approvals, and redactions.
 
-Given a baseline plan $\baseplan$ and optimized plan $\plan$, define an evidence tuple
-\begin{equation}
-\mathcal{E}(\baseplan,\plan) =
-(\Delta C, \Delta L, \Delta Q, \mathcal{D}_{\mathrm{plan}}, \mathcal{R}_{\mathrm{validators}}, \mathcal{R}_{\mathrm{policy}}, \mathcal{T}_{\mathrm{trace}}),
-\end{equation}
-where
-\begin{equation}
-\Delta C = \Cost(\baseplan)-\Cost(\plan), \quad
-\Delta L = \Latency(\baseplan)-\Latency(\plan), \quad
-\Delta Q = \Quality(\plan)-\Quality(\baseplan).
-\end{equation}
-The optimized plan is acceptable only if
-\begin{equation}
-\Accept(\plan \mid \baseplan)=1
-\end{equation}
-where
-\begin{equation}
-\Accept(\plan \mid \baseplan)=1 \iff
-\mathcal{R}_{\mathrm{validators}}=1 \wedge
-\Delta Q \geq -\epsilon_Q \wedge
-\mathcal{R}_{\mathrm{policy}}=1.
-\label{eq:acceptance}
-\end{equation}
+For observed trajectories, the evidence artifact is graph-shaped:
 
-Evidence is central. Without evidence, optimization becomes invisible prompt mutation. Invisible prompt mutation is not infrastructure.
+\begin{lstlisting}[language={}]
+type MigakiGraph = {
+  version: "migaki.openai-agents-js.graph.v0"
+  runId: string
+  status: "running" | "ok" | "error"
+  nodes: MigakiNode[]
+  edges: MigakiEdge[]
+  metadata: Record<string, unknown>
+}
+\end{lstlisting}
+
+A single run report can count nodes, model calls, tool calls, repeated operations, potential cache hits, longest paths, failed nodes, and estimated avoidable cost. A two-run comparison report should add reusable model calls, reusable tool calls, reusable token count, changed nodes, and blocked-reuse reasons.
+
+Given a baseline trajectory $T_0$ and a later trajectory $T_1$, define a comparison evidence tuple
+\begin{equation}
+\mathcal{E}(T_0,T_1)=
+(R_M, R_T, B, \widehat C_{\mathrm{avoidable}}, \widehat L_{\mathrm{avoidable}}, W),
+\end{equation}
+where $R_M$ is the set of reusable model-call nodes, $R_T$ is the set of reusable tool-call nodes, $B$ is the set of blocked reuse candidates with reasons, and $W$ is the warning set.
+
+Replay is acceptable only if
+\begin{equation}
+\Accept(\mathrm{replay}(v) \mid T_1)=1
+\end{equation}
+where acceptance includes cache-key equality, dependency equality, runtime compatibility, validator requirements, policy constraints, and freshness constraints. If these are unknown, the node can be counted as potentially reusable but not as avoided work.
+
+Evidence is central. Without evidence, optimization becomes invisible prompt mutation or invisible cache replay. Invisible execution mutation is not infrastructure.

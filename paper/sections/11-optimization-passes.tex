@@ -1,39 +1,44 @@
 \section{Optimization Passes}
 
-A \migaki{} execution plan is transformed by passes over \mir. Examples include:
+A \migaki{} execution plan is transformed by passes over \mir, while observed runs are analyzed by passes over trajectory graphs. v0.4 separates these stages so the system can earn optimization claims incrementally:
 
 \begin{table}[t]
 \centering
 \small
-\begin{tabular}{p{0.23\linewidth}p{0.66\linewidth}}
+\begin{tabular}{p{0.24\linewidth}p{0.62\linewidth}}
 \toprule
-\textbf{Pass family} & \textbf{Examples} \\
+\textbf{Stage} & \textbf{Representative passes} \\
 \midrule
-Context & exact duplicate elimination, dead context removal, tool definition pruning, stable prefix construction, memory compaction planning \\
-Cache & prompt-cache layout, breakpoint placement, cache hit estimation, cache read/write reporting \\
-Routing & model selection, provider selection, fallback planning, rate-limit-aware routing, cost-aware routing, latency-aware routing \\
-Parallelism & independent retrieval parallelization, parallel tool execution, speculative branch execution, validator parallelization \\
-Verification & deterministic invariants, schema validation, source-grounding checks, task-specific validators, model-based judges \\
-Reliability & retry planning, fallback planning, partial replay, idempotency checks, human approval insertion \\
-Governance & provider allow/deny enforcement, data-retention enforcement, privacy-class routing, trace redaction \\
+Observe & trace ingestion, span classification, cache-key recording, usage capture, error capture, local graph/report writing \\
+Compare & exact cache-key matching, dependency-hash comparison, runtime-hash comparison, repeated operation reporting, longest reusable path detection \\
+Estimate & avoidable token estimates, avoidable model/tool call counts, cost estimates, latency estimates, failed or blocked reuse reasons \\
+Replay & exact model-call replay, deterministic tool replay, validator-gated output reuse, privacy-aware cache reads, stale-output rejection \\
+Optimize & context deduplication, prompt-cache layout, routing, fallback planning, retry planning, parallelism, provider-aware lowering \\
 \bottomrule
 \end{tabular}
-\caption{Representative \migaki{} optimization pass families.}
+\caption{Evidence-first optimization stages for \migaki{}.}
 \end{table}
 
-Each pass should emit a plan diff and evidence. A minimal pass interface is:
+The earliest pass interface can remain small:
 
 \begin{lstlisting}[language={}]
 interface MigakiPass {
   name: string
   version: string
-  apply(plan: MIRPlan, context: PassContext): Promise<PassResult>
+  apply(input: MIRPlan | MigakiGraph, context: PassContext):
+    Promise<PassResult>
 }
 
 type PassResult = {
-  plan: MIRPlan
-  diff: MIRPlanDiff
+  output: MIRPlan | MigakiGraph | ComparisonReport
+  diff?: MIRPlanDiff
   evidence: Evidence[]
   warnings: Warning[]
 }
 \end{lstlisting}
+
+The important invariant is not the exact TypeScript shape. The invariant is that every pass emits evidence. A pass that changes execution without a diff, warning surface, validator boundary, or benchmarkable report is not an optimizer. It is hidden behavior.
+
+\begin{principle}[First compare, then replay]
+Graph comparison is a product milestone distinct from cache replay. \migaki{} should prove that reusable nodes can be detected before it proves that reusable nodes can be skipped.
+\end{principle}

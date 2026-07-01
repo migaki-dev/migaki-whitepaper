@@ -1,23 +1,37 @@
-\section{Examples}
+\section{Example: Repo-Agent Trajectory}
+
+The most useful early benchmark is not a loop of identical LLM prompts. It is a repo-agent task that resembles real coding-agent work:
+
+\begin{center}
+Read files $\rightarrow$ Search repository $\rightarrow$ Summarize context $\rightarrow$ Propose patch $\rightarrow$ Run tests $\rightarrow$ Debug $\rightarrow$ Final answer.
+\end{center}
+
+In a baseline agent framework, these steps are usually implicit in a run: some model calls, some tool calls, some retries, and a final output. With \migaki{} instrumentation, the same run becomes a trajectory graph. Model calls receive cache keys derived from normalized input, model name, model parameters, output schema, SDK version, and instrumentation version. Tool calls receive cache keys derived from tool name, tool version, arguments, SDK version, and instrumentation version.
+
+Across two similar repo-agent runs, exact reusable nodes might include:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item reading unchanged repository files;
+  \item searching with identical query arguments over the same commit;
+  \item summarizing the same file set under the same model and prompt shape;
+  \item reusing deterministic test-tool output when the patch and test command are unchanged.
+\end{itemize}
+
+Nodes should be blocked from reuse when dependencies change:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item repository files changed between runs;
+  \item tool arguments changed;
+  \item model parameters or output schema changed;
+  \item the runtime version, SDK version, or instrumentation version changed;
+  \item policy requires fresh execution;
+  \item validators are missing for model-output replay.
+\end{itemize}
+
+This example makes the benchmark honest. A first report may say: six model calls, seven tool calls, thirteen cacheable nodes, three potential cache hits, and one duplicate model-call-shaped operation. That does not prove savings. It proves that the trajectory contains measurable repeated work. The next benchmark should compare two graphs and report which nodes are exact reuse candidates.
 
 \subsection{RAG Workflow}
 
-A baseline enterprise support workflow may retrieve 20 document chunks, send all chunks to a frontier model, generate an answer, and return it. A \migaki-optimized plan may deduplicate overlapping chunks, drop low-relevance chunks, preserve stable policy instructions as a cacheable prefix, route chunk ranking to a cheaper model, use a stronger model for synthesis, validate the answer against retrieved sources, retry only the synthesis step if validation fails, and emit an evidence bundle.
+A RAG workflow remains a useful second example. A baseline enterprise support workflow may retrieve 20 document chunks, send all chunks to a frontier model, generate an answer, and return it. A \migaki{} plan may deduplicate overlapping chunks, preserve stable policy instructions as a cacheable prefix, route chunk ranking to a cheaper model, validate the answer against retrieved sources, retry only the synthesis step if validation fails, and emit an evidence bundle.
 
-The agent framework still decided the strategy:
-
-\begin{center}
-Retrieve $\rightarrow$ Answer $\rightarrow$ Validate.
-\end{center}
-
-\migaki{} optimized the execution:
-
-\begin{center}
-Deduplicate $\rightarrow$ Cache $\rightarrow$ Route $\rightarrow$ Parallelize $\rightarrow$ Validate $\rightarrow$ Report.
-\end{center}
-
-\subsection{Code Review Workflow}
-
-A code-review agent may load repository context, changed files, style guides, and prior conversation, then ask a frontier model for review. A \migaki{} plan can mark style guides as fixed and cacheable, mark changed files as non-droppable, remove unrelated history, run deterministic static checks, route lint explanations to a cheaper model, use a stronger model for architectural review, validate final comments against changed lines, and export evidence.
-
-This makes execution policy explicit and measurable: baseline tokens, optimized tokens, baseline cost, optimized cost, latency, validator pass rate, false-positive rate, and comment acceptance rate.
+The same rule applies: deduplication and cache layout are claims about evidence first. They become optimization claims only when validators and benchmarks show acceptable behavior.

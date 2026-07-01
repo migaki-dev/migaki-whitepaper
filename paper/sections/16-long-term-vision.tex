@@ -20,5 +20,13 @@ Models perform computation.
 \migaki{} focuses on one responsibility:
 
 \begin{quote}
-Given a logical agentic workflow and explicit constraints, produce the best measurable execution plan and evidence for why it is acceptable.
+Given a logical agentic workflow or observed agent trajectory and explicit constraints, produce the best measurable execution plan or reuse decision and evidence for why it is acceptable.
 \end{quote}
+
+The long-term system should close the loop:
+
+\begin{center}
+Observed trajectories $\rightarrow$ reusable evidence graphs $\rightarrow$ optimized \mir{} plans $\rightarrow$ capability-aware execution $\rightarrow$ new evidence.
+\end{center}
+
+This loop is what turns observability into optimization. Traces alone explain the past. Plans alone describe intent. \migaki{} should connect the two so repeated agent work becomes progressively more reusable, more auditable, and more efficient without hiding the assumptions that made reuse possible.

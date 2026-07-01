@@ -16,3 +16,5 @@ subject to
 Here $\widehat c$ is estimated cost, $\widehat q$ is estimated task-specific quality, $\widehat \ell$ is estimated latency, $\theta_v$ is a quality threshold, $s_v$ is a latency service level, and $\kappa_v$ is the privacy class of the data entering node $v$.
 
 A \migaki{} router is not credible because it routes. It is credible only if it reports measured deltas against baselines and validates that quality constraints still hold.
+
+The same evidence-first rule applies here as for caching. A v0 system may record which model was used, which parameters were used, what the normalized input hash was, and what output schema or validator boundary applied. A later routing pass can propose alternatives only when the evidence bundle can state what changed, why it was allowed, and how quality was checked. Routing is an optimization pass, not a substitute for evaluation.

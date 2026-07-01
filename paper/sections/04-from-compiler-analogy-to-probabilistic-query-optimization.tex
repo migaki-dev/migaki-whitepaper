@@ -2,8 +2,20 @@
 
 Computing repeatedly separates intent from execution. Source code is separated from machine code by compilers. SQL queries are separated from execution plans by query optimizers. Applications are separated from CPU scheduling by operating systems. Distributed APIs are separated from transport mechanics by RPC runtimes.
 
-The compiler analogy is useful but limited. Traditional compilers typically preserve exact program semantics. AI execution is stochastic: changing context order, compressing history, switching models, altering retrieval, or delaying reasoning can change output behavior.
+The compiler analogy is useful but limited. Traditional compilers typically preserve exact program semantics. AI execution is stochastic: changing context order, compressing history, switching models, altering retrieval, replaying a prior output, or delaying reasoning can change output behavior.
 
 \migaki{} is therefore closer to a query optimizer for probabilistic model/tool graphs. A query optimizer receives a logical query, estimates alternatives, and produces an execution plan. \migaki{} receives a logical AI workflow, estimates alternatives, and produces an execution plan under cost, latency, quality, policy, and provider-capability constraints.
 
-The goal is not exact semantic preservation. The goal is validated behavioral equivalence under declared constraints.
+The goal is not exact semantic preservation. The goal is validated behavioral equivalence under declared constraints. That means \migaki{} should not begin by asserting that an optimized trajectory is equivalent. It should begin by producing evidence that makes equivalence inspectable:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item stable identifiers for operations and dependencies;
+  \item deterministic hashes for normalized inputs and runtime assumptions;
+  \item graph edges showing which nodes call, depend on, or produce other nodes;
+  \item validators and acceptance criteria that define where replay is allowed;
+  \item benchmark reports that separate potential reuse from actual avoided work.
+\end{itemize}
+
+\begin{principle}[Benchmarked optimization]
+In probabilistic agent systems, optimization claims should be stated as benchmarked evidence, not as compiler-style semantic guarantees.
+\end{principle}

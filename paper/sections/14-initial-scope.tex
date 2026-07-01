@@ -1,21 +1,22 @@
 \section{Initial Scope}
 
-The first implementation should be intentionally small. The objective is not completeness. The objective is validating the abstraction.
+The first implementation should be intentionally small. The objective is not completeness. The objective is validating the evidence ladder.
 
 \migaki{} v0 should include:
 
 \begin{itemize}[leftmargin=1.5em]
-  \item TypeScript runtime and fetch-compatible provider wrapper;
+  \item a TypeScript runtime and local store for graph-shaped execution artifacts;
   \item \mir{} schema v0 and provider capability registry;
-  \item adapters for OpenAI-style, Anthropic-style, and LiteLLM-compatible APIs;
-  \item context block ledger, token estimation, and cost estimation;
-  \item exact duplicate context elimination and stable prefix detection;
-  \item prompt-cache layout reporting;
-  \item simple retry, fallback, and static routing policy;
+  \item instrumentation for at least one real agent framework, beginning with OpenAI Agents SDK for JavaScript/TypeScript;
+  \item local \texttt{events.jsonl}, \texttt{graph.json}, and \texttt{report.md} artifacts;
+  \item deterministic hashes and cache keys for model and tool operations;
+  \item deterministic repo-agent benchmark fixture;
+  \item live-provider smoke benchmark for trace-capture grounding, not speedup claims;
+  \item two-run graph comparison for exact reusable-node detection;
   \item execution evidence bundle and replayable trace artifact;
-  \item CLI report for baseline-versus-optimized execution.
+  \item CLI reports for run summaries and comparison summaries.
 \end{itemize}
 
-It should not lead with general semantic compression, general semantic caching, autonomous global routing, cross-provider equivalence, or claims of identical answers. These can be experimental passes later.
+It should not lead with general semantic compression, general semantic caching, autonomous global routing, cross-provider equivalence, vector databases, distributed cache, UI, or claims of identical answers. These can be experimental passes later.
 
-A credible v0 demo is a multi-step RAG or code-review workflow in which \migaki{} reduces context duplication, improves cache layout, routes cheap classification/ranking calls to cheaper models, keeps synthesis on stronger models, validates structured output, retries only failed branches, and emits an evidence report showing cost, latency, and validator deltas.
+A credible v0.4 demo is a repo-agent workflow in which \migaki{} records both runs, writes graph artifacts, compares cache keys, identifies reusable model and tool nodes, explains blocked reuse, estimates avoidable calls and tokens, and avoids claiming actual savings until controlled replay is enabled.

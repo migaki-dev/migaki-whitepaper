@@ -20,3 +20,7 @@ type ProviderCapabilities = {
 \end{lstlisting}
 
 Provider backends lower optimized \mir{} into concrete execution plans. In the near term, providers do not execute \mir{} directly. \migaki{} executes through adapters targeting provider APIs, gateways, workflow runtimes, or local inference backends.
+
+Framework adapters are equally important. The OpenAI Agents SDK exposes the primitives \migaki{} needs for a first trajectory recorder: agents, model calls, tool calls, handoffs, tracing spans, and run configuration \citep{openai_agents_js,openai_agents_tracing}. The \texttt{migaki-openai-agents-js} package uses those primitives to record a reusable graph without forking the SDK deeply.
+
+This is the desired adapter posture. \migaki{} should not require every agent application to be rewritten around \mir{} on day one. It should be able to wrap existing execution, observe it, and gradually introduce comparison, replay, and optimization where evidence supports those steps.
