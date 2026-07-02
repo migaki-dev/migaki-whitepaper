@@ -10,17 +10,19 @@
 
 \migaki{} is also not a cache product in disguise. A cache can store outputs. \migaki{} must explain whether an output is reusable: which input hash matched, which dependencies matched, which runtime assumptions matched, which validator boundary applies, and which downstream nodes depend on the result.
 
-\migaki{} occupies the missing middle:
+\migaki{} occupies the missing middle: not between a model and an application, and not as another agent framework above the application, but as an execution layer between AI components and the concrete substrates that run them.
 
 \begin{center}
-\fbox{\begin{minipage}{0.78\linewidth}
+\fbox{\begin{minipage}{0.86\linewidth}
 \centering
-Application or Agent Framework\\
+Application, Agent Framework, and AI Components\\
 $\downarrow$\\
-\textbf{Migaki Execution Optimizer}\\
+\textbf{Migaki Execution Runtime and Optimizer}\\
 $\downarrow$\\
-Provider, Gateway, Tool, Workflow, and Observability Backends
+Models, Providers, Tools, Retrieval, Workflow, and Observability Backends
 \end{minipage}}
 \end{center}
+
+This positioning is deliberately generation-independent. \migaki{} does not optimize language models alone. It optimizes the execution of AI systems: dependency-aware work that may be implemented today with prompts, tools, retrieval, validators, and agent loops, and tomorrow with different reasoning or memory substrates.
 
 It can be approached from two directions. From the planning side, it consumes a logical execution graph, applies optimization passes, lowers the result into concrete runtimes, and emits evidence. From the instrumentation side, it records observed agent runs as trajectory graphs and uses those graphs to learn where exact reuse, replay, and later optimization are possible.
