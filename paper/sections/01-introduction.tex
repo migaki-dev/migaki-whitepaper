@@ -1,10 +1,18 @@
 \section{Introduction}
 
+\begin{quote}
+\textbf{\migaki{}} \emph{noun}; pronounced \emph{mee-gah-kee}. From Japanese: polishing; refinement. In this paper: the refinement of AI execution into work that is observable, reusable, and measurable.
+\end{quote}
+
+Computing history repeatedly answers exploding complexity with a new abstraction boundary. Hardware gained operating systems. Programming languages gained compilers. Databases gained query planners. Distributed systems gained schedulers. Cloud infrastructure gained runtimes and containers.
+
+AI systems are entering a similar phase. Yesterday, many applications were organized around a single language model. Today, production systems are assembled from models, tools, memory, retrieval, planning, verification, agent workflows, gateways, and observability. Tomorrow's systems may add latent reasoning, persistent world models, semantic representations beyond prompts, or architectures that are not yet part of the vocabulary. The durable requirement is not to predict those boxes. It is to build an execution layer that can observe, compare, replay, and optimize work across them.
+
 The current AI application stack is crowded. A production AI system may include an application framework, an agent orchestration library, a model gateway, one or more provider APIs, tool protocols, durable workflow infrastructure, observability, and evaluation. OpenAI's Agents SDK, for example, exposes agents, tools, handoffs, guardrails, sessions, human-in-the-loop mechanisms, and tracing in Python and JavaScript/TypeScript \citep{openai_agents_python,openai_agents_js,openai_agents_tracing}. LangGraph emphasizes durable execution, streaming, persistence, and human-in-the-loop workflows \citep{langgraph_overview}. Cloudflare AI Gateway provides analytics, logging, caching, rate limiting, retries, and model fallback \citep{cloudflare_ai_gateway}. LiteLLM exposes a provider gateway abstraction and model routing strategies across many providers \citep{litellm_routing}. The Model Context Protocol (MCP) standardizes tool exposure through named tools with schemas and metadata \citep{mcp_tools}. OpenTelemetry has moved GenAI telemetry toward specialized semantic conventions for spans, metrics, and events \citep{otel_genai}.
 
-\migaki{} is pronounced \emph{mee-gah-kee}. The name comes from Japanese \emph{migaki}, meaning polishing or refinement; in this paper it suggests polishing execution into something observable, reusable, and measurable.
-
 This is progress. It is also fragmentation. Execution decisions are scattered across application code, framework internals, provider-specific APIs, gateway settings, workflow retries, evaluation jobs, and tracing backends. The same concerns recur: model choice, provider choice, context assembly, duplicate elimination, prompt-cache layout, retrieval ordering, side-effect control, validation, retry policy, human approval, trace capture, cost accounting, and data governance.
+
+Despite the sophistication of the surrounding stack, AI systems still execute work surprisingly literally. A workflow is written and the runtime follows it. Models repeatedly reason over similar context. Tools are called independently. Retrieval is repeated. Verification is duplicated. Small input changes can trigger complete re-execution. As AI systems become more capable and more compound, the cost of inefficient execution grows with them.
 
 \migaki{} begins from a narrow claim: AI systems need an execution layer that represents work as a graph that can be observed, compared, and eventually optimized. The first milestone is not a clever router or a semantic cache. The first milestone is trustworthy evidence: a run should produce an auditable graph of what happened, including model calls, tool calls, handoffs, outputs, failures, usage, and cache keys.
 
