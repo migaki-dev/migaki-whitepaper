@@ -17,7 +17,7 @@ Here $\mathcal{C}_{p(v)}$ represents the cache capabilities of the selected prov
 For agent trajectories, cache planning should be staged. First, record cache keys and provider assumptions. Second, compare two graphs and identify exact cache-key matches. Third, estimate avoidable model calls, tool calls, tokens, latency, and cost. Fourth, replay only when validators and policy allow it.
 
 \begin{principle}[Cache metadata before cache replay]
-The first useful cache system for agentic workflows is not one that skips work. It is one that records enough evidence to know which work could have been skipped.
+The first useful cache system for AI workflows is not one that skips work. It is one that records enough evidence to know which work could have been skipped.
 \end{principle}
 
 This avoids the easiest failure mode: serving stale garbage with confidence. A \texttt{MigakiCacheKey} can make reuse inspectable before any runtime is allowed to reuse it.

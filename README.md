@@ -2,7 +2,7 @@
 
 Source and release assets for:
 
-**Migaki: Toward an Execution Optimizer for Agentic Systems**
+**Migaki: Toward an Execution Optimizer for AI Systems**
 
 This repository is a living draft until the 1.0 release. Draft/version labels live inside the paper source itself.
 

@@ -7,7 +7,7 @@
   \item[Trajectory graph.] An observed execution record: what actually happened during a run, including agent steps, model calls, tool calls, handoffs, outputs, errors, usage, and cache metadata.
 \end{description}
 
-\mir{} is not a prompt format. It is not a JSON wrapper around chat completions. It is a logical representation of agentic computation. A trajectory graph is not a full observability product. It is the minimum reusable graph needed to compare runs and reason about exact repeated work.
+\mir{} is not a prompt format. It is not a JSON wrapper around chat completions. It is a logical representation of AI execution. A trajectory graph is not a full observability product. It is the minimum reusable graph needed to compare runs and reason about exact repeated work.
 
 The current \migaki{} TypeScript implementation grounds this distinction. The \texttt{migaki-openai-agents-js} package instruments the OpenAI Agents SDK for JavaScript/TypeScript \citep{openai_agents_js,migaki_openai_agents_js}. A user can wrap a run:
 
