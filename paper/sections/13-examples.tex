@@ -6,6 +6,13 @@ The most useful early benchmark is not a loop of identical LLM prompts. It is a 
 Read files $\rightarrow$ Search repository $\rightarrow$ Summarize context $\rightarrow$ Propose patch $\rightarrow$ Run tests $\rightarrow$ Debug $\rightarrow$ Final answer.
 \end{center}
 
+For an MVP benchmark, this should become a task ladder rather than one
+handpicked trajectory. Realistic repo-agent families include read-only
+reconnaissance, implementation and debugging, CI or toolchain triage, docs and
+wiki alignment, issue planning, PR review, and evidence handoff. The point is
+not that every fixture is large. The point is that each common coding-agent
+mode exposes different reuse boundaries.
+
 In a baseline agent framework, these steps are usually implicit in a run: some model calls, some tool calls, some retries, and a final output. With \migaki{} instrumentation, the same run becomes a trajectory graph. Model calls receive cache keys derived from normalized input, model name, model parameters, output schema, SDK version, and instrumentation version. Tool calls receive cache keys derived from tool name, tool version, arguments, SDK version, and instrumentation version.
 
 Across two similar repo-agent runs, exact reusable nodes might include:
