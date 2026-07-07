@@ -10,7 +10,7 @@ The first implementation should be intentionally small. The objective is not com
   \item instrumentation for at least one real agent framework, beginning with OpenAI Agents SDK for JavaScript/TypeScript;
   \item local \texttt{events.jsonl}, \texttt{graph.json}, and \texttt{report.md} artifacts;
   \item deterministic hashes and cache keys for model and tool operations;
-  \item deterministic repo-agent benchmark fixture;
+  \item deterministic repo-agent task-ladder benchmark fixtures covering common coding-agent work;
   \item live-provider smoke benchmark for trace-capture grounding, not speedup claims;
   \item two-run graph comparison for exact reusable-node detection;
   \item execution evidence bundle and replayable trace artifact;
@@ -19,4 +19,4 @@ The first implementation should be intentionally small. The objective is not com
 
 It should not lead with general semantic compression, general semantic caching, autonomous global routing, cross-provider equivalence, vector databases, distributed cache, UI, or claims of identical answers. These can be experimental passes later.
 
-A credible v0.4 demo is a repo-agent workflow in which \migaki{} records both runs, writes graph artifacts, compares cache keys, identifies reusable model and tool nodes, explains blocked reuse, estimates avoidable calls and tokens, and avoids claiming actual savings until controlled replay is enabled.
+A credible v0.4 demo is a repo-agent task ladder in which \migaki{} records comparable runs, writes graph artifacts, compares cache keys, identifies reusable model and tool nodes, explains blocked reuse, estimates avoidable calls and tokens, and avoids claiming actual savings until controlled replay is enabled. The ladder should include read-only reconnaissance, implementation and debugging, CI or toolchain triage, docs and wiki alignment, issue planning, PR review, and evidence handoff so the benchmark resembles normal repository-agent work instead of a single narrow script.
